@@ -94,6 +94,8 @@ func NewController(
 	kubeclientset kubernetes.Interface,
 	sampleclientset clientset.Interface,
 	deploymentInformer appsinformers.DeploymentInformer,
+	serviceInformer coreinformers.serviceInformer,
+	ingressInformer netinformers.ingressInformer,
 	fooInformer informers.FooInformer) *Controller {
 	logger := klog.FromContext(ctx)
 
