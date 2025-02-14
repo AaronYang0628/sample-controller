@@ -15,6 +15,14 @@ It makes use of the generators in [k8s.io/code-generator](https://github.com/kub
 to generate a typed client, informers, listers and deep-copy functions. You can
 do this yourself using the `./hack/update-codegen.sh` script.
 
+Before you execute  `./hack/update-codegen.sh` script, you need to download `code-generator` first
+```sh
+cd ..
+git clone https://github.com/kubernetes/code-generator.git
+cd sample-controller
+./hack/update-codegen.sh
+```
+
 The `update-codegen` script will automatically generate the following files &
 directories:
 
@@ -67,13 +75,14 @@ This is an example of how to build a kube-like controller with a single type.
 ```sh
 # assumes you have a working kubeconfig, not required if operating in-cluster
 go build -o sample-controller .
-./sample-controller -kubeconfig=$HOME/.kube/config
 
 # create a CustomResourceDefinition
 kubectl create -f artifacts/examples/crd-status-subresource.yaml
 
 # create a custom resource of type Foo
 kubectl create -f artifacts/examples/example-foo.yaml
+
+./sample-controller -kubeconfig=$HOME/.kube/config
 
 # check deployments created through the custom resource
 kubectl get deployments
