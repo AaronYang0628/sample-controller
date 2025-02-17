@@ -290,42 +290,42 @@ func (c *Controller) syncHandler(ctx context.Context, objectRef cache.ObjectName
 	// If this number of the replicas on the Foo resource is specified, and the
 	// number does not equal the current desired replicas on the Deployment, we
 	// should update the Deployment resource.
-	if foo.Spec.Replicas != nil && *foo.Spec.Replicas != *deployment.Spec.Replicas {
-		logger.V(4).Info("Update deployment resource", "currentReplicas", *deployment.Spec.Replicas, "desiredReplicas", *foo.Spec.Replicas)
-		deployment, err = c.kubeclientset.AppsV1().Deployments(foo.Namespace).Update(ctx, newDeployment(foo), metav1.UpdateOptions{FieldManager: FieldManager})
-	}
+	//if foo.Spec.Replicas != nil && *foo.Spec.Replicas != *deployment.Spec.Replicas {
+	//	logger.V(4).Info("Update deployment resource", "currentReplicas", *deployment.Spec.Replicas, "desiredReplicas", *foo.Spec.Replicas)
+	//	deployment, err = c.kubeclientset.AppsV1().Deployments(foo.Namespace).Update(ctx, newDeployment(foo), metav1.UpdateOptions{FieldManager: FieldManager})
+	//}
 
 	// If an error occurs during Update, we'll requeue the item so we can
 	// attempt processing again later. This could have been caused by a
 	// temporary network failure, or any other transient reason.
-	if err != nil {
-		return err
-	}
-
-	// Finally, we update the status block of the Foo resource to reflect the
-	// current state of the world
-	err = c.updateFooStatus(ctx, foo, deployment)
-	if err != nil {
-		return err
-	}
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//// Finally, we update the status block of the Foo resource to reflect the
+	//// current state of the world
+	//err = c.updateFooStatus(ctx, foo, deployment)
+	//if err != nil {
+	//	return err
+	//}
 
 	c.recorder.Event(foo, corev1.EventTypeNormal, SuccessSynced, MessageResourceSynced)
 	return nil
 }
 
-func (c *Controller) updateFooStatus(ctx context.Context, foo *samplev1alpha1.Foo, deployment *appsv1.Deployment) error {
-	// NEVER modify objects from the store. It's a read-only, local cache.
-	// You can use DeepCopy() to make a deep copy of original object and modify this copy
-	// Or create a copy manually for better performance
-	fooCopy := foo.DeepCopy()
-	fooCopy.Status.AvailableReplicas = deployment.Status.AvailableReplicas
-	// If the CustomResourceSubresources feature gate is not enabled,
-	// we must use Update instead of UpdateStatus to update the Status block of the Foo resource.
-	// UpdateStatus will not allow changes to the Spec of the resource,
-	// which is ideal for ensuring nothing other than resource status has been updated.
-	_, err := c.sampleclientset.SamplecontrollerV1alpha1().Foos(foo.Namespace).UpdateStatus(ctx, fooCopy, metav1.UpdateOptions{FieldManager: FieldManager})
-	return err
-}
+//func (c *Controller) updateFooStatus(ctx context.Context, foo *samplev1alpha1.Foo, deployment *appsv1.Deployment) error {
+//	// NEVER modify objects from the store. It's a read-only, local cache.
+//	// You can use DeepCopy() to make a deep copy of original object and modify this copy
+//	// Or create a copy manually for better performance
+//	fooCopy := foo.DeepCopy()
+//	fooCopy.Status.AvailableReplicas = deployment.Status.AvailableReplicas
+//	// If the CustomResourceSubresources feature gate is not enabled,
+//	// we must use Update instead of UpdateStatus to update the Status block of the Foo resource.
+//	// UpdateStatus will not allow changes to the Spec of the resource,
+//	// which is ideal for ensuring nothing other than resource status has been updated.
+//	_, err := c.sampleclientset.SamplecontrollerV1alpha1().Foos(foo.Namespace).UpdateStatus(ctx, fooCopy, metav1.UpdateOptions{FieldManager: FieldManager})
+//	return err
+//}
 
 // enqueueFoo takes a Foo resource and converts it into a namespace/name
 // string which is then put onto the work queue. This method should *not* be
